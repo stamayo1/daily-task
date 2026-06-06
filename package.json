@@ -1,6 +1,6 @@
 {
   "name": "daily-task",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
@@ -21,6 +21,10 @@
     "@angular/platform-browser": "^20.0.0",
     "@angular/platform-browser-dynamic": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@awesome-cordova-plugins/firebase-analytics": "^9.2.0",
+    "@awesome-cordova-plugins/firebase-config": "^9.2.0",
+    "@awesome-cordova-plugins/firebase-crashlytics": "^9.2.0",
+    "@awesome-cordova-plugins/sqlite": "^9.2.0",
     "@ionic/angular": "^8.0.0",
     "@ionic/cordova-builders": "^12.3.0",
     "ionicons": "^7.0.0",
@@ -42,6 +46,18 @@
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
+    "cordova-android": "^15.0.0",
+    "cordova-ios": "^8.1.0",
+    "cordova-plugin-device": "2.0.2",
+    "cordova-plugin-firebase-analytics": "^8.0.0",
+    "cordova-plugin-firebase-config": "^8.0.0",
+    "cordova-plugin-firebase-crashlytics": "^1.2.0",
+    "cordova-plugin-ionic-keyboard": "^2.0.5",
+    "cordova-plugin-ionic-webview": "^5.0.0",
+    "cordova-plugin-splashscreen": "5.0.2",
+    "cordova-plugin-statusbar": "^2.4.2",
+    "cordova-sqlite-storage": "^7.0.0",
+    "cordova-support-android-plugin": "~2.0.4",
     "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",
@@ -55,5 +71,28 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.9.0"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-firebase-config": {
+        "ANDROID_FIREBASE_BOM_VERSION": "32.5.0",
+        "IOS_FIREBASE_POD_VERSION": "10.17.0"
+      },
+      "cordova-plugin-firebase-crashlytics": {
+        "ANDROID_FIREBASE_CORE_VERSION": "16.0.0",
+        "ANDROID_FIREBASE_ANALYTICS_VERSION": "17.4.3",
+        "ANDROID_FIREBASE_CRASHLYTICS_VERSION": "17.1.0"
+      },
+      "cordova-sqlite-storage": {}
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
 }

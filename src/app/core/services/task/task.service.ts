@@ -4,6 +4,7 @@ import { SqliteServices } from '../sqliteServices/sqlite-services';
 import { LoggerServices } from '../loggerServices/logger-services';
 import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
+import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
 export class TaskService {
   private readonly _sqlite = inject(SqliteServices);
   private readonly _logger = inject(LoggerServices);
+  private readonly _analytics = inject(FirebaseAnalytics);
 
   readonly tasks = signal<Task[]>([]);
   readonly searchQuery = signal<string>('');
@@ -113,6 +115,16 @@ export class TaskService {
 
     this.tasks.update(current => [newTask, ...current]);
     this._logger.info(`[TaskService] Task created with ID ${result.insertId}`);
+
+    try {
+      await this._analytics.logEvent('task_created', { 
+        title: payload.title,
+        priority: payload.priority, 
+        category_id: payload.category_id ?? null 
+      });
+    } catch (e) {
+      this._logger.warn('[Analytics] Failed to log task_created', e);
+    }
 
     return result.insertId;
   }

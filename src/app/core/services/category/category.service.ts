@@ -4,6 +4,7 @@ import { SqliteServices } from '../sqliteServices/sqlite-services';
 import { LoggerServices } from '../loggerServices/logger-services';
 import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
+import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
 export class CategoryService {
   private readonly _sqlite = inject(SqliteServices);
   private readonly _logger = inject(LoggerServices);
+  private readonly _analytics = inject(FirebaseAnalytics);
 
   readonly categories = signal<Category[]>([]);
 
@@ -59,6 +61,13 @@ export class CategoryService {
 
     this.categories.update(current => [...current, newCategory].sort((a, b) => a.name.localeCompare(b.name)));
     this._logger.info(`[CategoryService] Category created with ID ${result.insertId}`);
+    
+    try {
+      await this._analytics.logEvent('category_created', { name: name });
+    } catch (e) {
+      this._logger.warn('[Analytics] Failed to log category_created', e);
+    }
+
     return result.insertId;
   }
 
@@ -86,6 +95,12 @@ export class CategoryService {
       // Update state
       this.categories.update(current => current.filter(c => c.id !== id));
       this._logger.info(`[CategoryService] Category ID ${id} deleted`);
+      
+      try {
+        await this._analytics.logEvent('category_deleted', { id: id });
+      } catch (e) {
+        this._logger.warn('[Analytics] Failed to log category_deleted', e);
+      }
     } catch (error) {
       this._logger.error(`[CategoryService] Error deleting Category ID ${id}`, error);
       throw error;

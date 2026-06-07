@@ -18,7 +18,7 @@
       <ion-label>Hoy</ion-label>
     </ion-chip>
     <ion-chip [class.selected]="statusFilter() === 'pending'" (click)="setStatusFilter('pending')">
-      <ion-label>Pendientes ({{ pendingCount() }})</ion-label>
+      <ion-label>Pendientes<span *ngIf="pendingCount() > 0"> {{ pendingCount() }}</span></ion-label>
     </ion-chip>
     <ion-chip [class.selected]="statusFilter() === 'completed'" (click)="setStatusFilter('completed')">
       <ion-label>Completadas</ion-label>

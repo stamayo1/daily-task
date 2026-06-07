@@ -1,0 +1,25 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ category ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="categoryForm" (ngSubmit)="save()" class="ion-padding-top">
+    <ion-item class="ion-margin-bottom" lines="none" style="--background: #f4f6fa; border-radius: 8px;">
+      <ion-label position="stacked" style="color: var(--ion-color-dark-tint); font-weight: 600;">Nombre de la Categoría</ion-label>
+      <ion-input type="text" formControlName="name" placeholder="Ej. Trabajo" style="--padding-start: 0;"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="categoryForm.invalid" style="--background: var(--ion-color-primary); --border-radius: 12px; margin-top: 24px; --padding-top: 14px; --padding-bottom: 14px;">
+      Guardar
+    </ion-button>
+
+    <ion-button *ngIf="category" expand="block" color="danger" fill="clear" (click)="deleteCategory()" style="margin-top: 8px;">
+      Eliminar Categoría
+    </ion-button>
+  </form>
+</ion-content>

@@ -31,6 +31,29 @@ export class SqliteServices {
   }
 
   /**
+   * @description This method is used to get the database connection.
+   * @returns Database connection object.
+   */
+  getDb(): SQLiteObject | undefined {
+    if (!this.db) {
+      this.logger.warn('[SQLite] Database connection is not open');
+      return undefined;
+    }
+
+    return this.db;
+  }
+
+  /**
+   * @description This method is used to close the database connection.
+   */
+  async close(): Promise<void> {
+    if (!this.db) return;
+    await this.db.close();
+    this.db = undefined;
+    this.logger.info(`[SQLite] Connection closed to ${this.dbName}`);
+  }
+
+  /**
    * @description This method is used to open the database connection and apply migrations.
    */
   private async openConnection(): Promise<void> {

@@ -1,0 +1,25 @@
+<div class="task-card" [class.completed]="task.status === 'done'">
+  <div class="radio-col" (click)="onCompleteTask($event)">
+    <div class="custom-radio" [class.checked]="task.status === 'done'"></div>
+  </div>
+  
+  <div class="content-col">
+    <div class="header-row">
+      <h3 class="task-title">{{ task.title }}</h3>
+      <ion-icon name="ellipsis-vertical" class="options-icon" (click)="onOptions($event)"></ion-icon>
+    </div>
+    
+    <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+    
+    <div class="footer-row">
+      <div class="badges">
+        <span class="badge priority-badge" [ngClass]="priorityColor">{{ priorityLabel }}</span>
+        <span class="badge category-badge" *ngIf="categoryName">{{ categoryName }}</span>
+      </div>
+      <div class="time-info" *ngIf="task.due_date">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ task.due_date | date:'MMM d, h:mm a' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

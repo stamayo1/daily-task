@@ -2,6 +2,12 @@
 
 Aplicación mobile para el seguimiento de tareas diarias. Enfocada en la simplicidad y funcionalidad. El objetivo es crear una aplicación multiplataforma que permita a los usuarios gestionar sus tareas diarias de manera eficiente.
 
+## Capturas de Pantalla
+
+| Pantalla de Bienvenida | Lista de Tareas |
+| :---: | :---: |
+| <img src="evidence/Simulator%20Screenshot%20-%20iPhone%2017%20Pro%20-%202026-06-07%20at%2004.18.59.png" width="300" alt="Pantalla de Bienvenida" /> | <img src="evidence/Screenshot_1780824037.png" width="300" alt="Lista de Tareas" /> |
+
 ## Stack
 
 - Ionic + Angular 

@@ -6,6 +6,7 @@ import { Platform } from '@ionic/angular/standalone';
 import { UserService } from '../user/user.service';
 import { TaskService } from '../task/task.service';
 import { CategoryService } from '../category/category.service';
+import { RemoteConfigService } from '../remoteConfig/remote-config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,14 +21,19 @@ export class AppInitializer {
   private _platform = inject(Platform);
   private _taskService = inject(TaskService);
   private _categoryService = inject(CategoryService);
+  private _remoteConfigService = inject(RemoteConfigService);
 
   async init(): Promise<void> {
     try {
       await this._platform.ready();
 
-      this._logger.info('[AppInitializer] Dispositivo listo. Iniciando SQLite...');
+      this._logger.info('[AppInitializer] Dispositivo listo. Iniciando SQLite y Remote Config...');
 
-      await this._sqlite.open(this.DB_NAME, this.DB_LOCATION);
+      // Open SQLite and initialize Remote Config concurrently
+      await Promise.all([
+        this._sqlite.open(this.DB_NAME, this.DB_LOCATION),
+        this._remoteConfigService.init()
+      ]);
       
       // Load initial data
       await Promise.all([

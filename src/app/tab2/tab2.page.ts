@@ -15,6 +15,7 @@ import { CategoryService } from '../core/services/category/category.service';
 import { CommonModule } from '@angular/common';
 import { CategoryModalComponent } from '../shared/components/category-modal/category-modal.component';
 import { Category } from '../core/models/category.model';
+import { RemoteConfigService } from '../core/services/remoteConfig/remote-config.service';
 
 @Component({
   selector: 'app-tab2',
@@ -32,6 +33,7 @@ export class Tab2Page implements OnInit {
   private fb = inject(FormBuilder);
   private taskService = inject(TaskService);
   public categoryService = inject(CategoryService);
+  public remoteConfigService = inject(RemoteConfigService);
   private router = inject(Router);
   private modalController = inject(ModalController);
 

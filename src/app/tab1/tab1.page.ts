@@ -8,6 +8,7 @@ import { CategoryService } from '../core/services/category/category.service';
 import { TaskCardComponent } from '../shared/components/task-card/task-card.component';
 import { Task } from '../core/models/task.model';
 import { getLocalDateString, toLocalDateString } from '../core/utils/date.utils';
+import { RemoteConfigService } from '../core/services/remoteConfig/remote-config.service';
 
 @Component({
   selector: 'app-tab1',
@@ -19,6 +20,7 @@ import { getLocalDateString, toLocalDateString } from '../core/utils/date.utils'
 export class Tab1Page {
   taskService = inject(TaskService);
   categoryService = inject(CategoryService);
+  remoteConfigService = inject(RemoteConfigService);
   private router = inject(Router);
 
   todayDate = new Date();

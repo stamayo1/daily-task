@@ -1,0 +1,13 @@
+<div class="progress-section">
+  <div class="circle-chart" [style.--progress]="progress + '%'">
+    <div class="circle-inner">
+      <h2 class="percentage">{{ progress }}%</h2>
+      <span class="label">Meta Diaria</span>
+    </div>
+  </div>
+  
+  <div class="progress-text">
+    <h3>¡Gran Progreso!</h3>
+    <p>Has completado {{ completed }} de tus {{ total }} tareas.</p>
+  </div>
+</div>

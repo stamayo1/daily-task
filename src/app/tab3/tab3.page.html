@@ -1,5 +1,27 @@
-<app-header></app-header>
+<app-header [defaultGoBack]="false"></app-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+<ion-content [scrollY]="true">
+  <div class="metrics-container" *ngIf="metrics() as data">
+
+    <!-- Circular Progress -->
+    <app-circular-progress
+      [progress]="data.dailyGoalProgress"
+      [completed]="data.completedDueToday"
+      [total]="data.dailyGoalTotal">
+    </app-circular-progress>
+
+    <!-- Stats Cards -->
+    <app-stats-section
+      [completedToday]="data.completedToday"
+      [pendingToday]="data.pendingToday"
+      [completedEarly]="data.completedEarly">
+    </app-stats-section>
+
+    <!-- Weekly Productivity Chart -->
+    <app-weekly-chart
+      [weeklyData]="data.weeklyData"
+      [last7DaysLabels]="data.last7DaysLabels">
+    </app-weekly-chart>
+
+  </div>
 </ion-content>

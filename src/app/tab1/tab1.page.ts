@@ -7,6 +7,7 @@ import { TaskService } from '../core/services/task/task.service';
 import { CategoryService } from '../core/services/category/category.service';
 import { TaskCardComponent } from '../shared/components/task-card/task-card.component';
 import { Task } from '../core/models/task.model';
+import { getLocalDateString, toLocalDateString } from '../core/utils/date.utils';
 
 @Component({
   selector: 'app-tab1',
@@ -36,8 +37,8 @@ export class Tab1Page {
     } else if (sFilter === 'pending') {
       tasks = tasks.filter(t => t.status === 'pending');
     } else if (sFilter === 'today') {
-      const todayStr = new Date().toISOString().split('T')[0];
-      tasks = tasks.filter(t => t.due_date && t.due_date.startsWith(todayStr));
+      const todayStr = getLocalDateString();
+      tasks = tasks.filter(t => t.due_date && toLocalDateString(t.due_date) === todayStr);
     }
 
     // 2. Filter by category
@@ -70,15 +71,14 @@ export class Tab1Page {
     }
   }
 
-  getCategoryName(categoryId?: number): string | undefined {
+  getCategoryName(categoryId?: number | null): string | undefined {
     if (!categoryId) return undefined;
     const cat = this.categoryService.categories().find(c => c.id === categoryId);
     return cat?.name;
   }
 
   async onCompleteTask(task: Task) {
-    const newStatus = task.status === 'done' ? 'pending' : 'done';
-    await this.taskService.update(task.id!, { status: newStatus });
+    await this.taskService.toggleStatus(task.id!);
   }
 
   goToDetail(task: Task) {

@@ -6,6 +6,8 @@ import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
 import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 
+import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +56,77 @@ export class TaskService {
       .sort((a, b) => (b.completed_at ?? '').localeCompare(a.completed_at ?? ''))
       .slice(0, 5)
   );
+
+  readonly metrics = computed(() => {
+    const all = this.tasks();
+    const today = getLocalDateString();
+    
+    let completedToday = 0;
+    let completedDueToday = 0;
+    let pendingToday = 0;
+    let completedEarly = 0;
+    let dailyGoalTotal = 0;
+    
+    const weeklyData = Array.from({length: 7}, () => ({ completed: 0, total: 0 }));
+    const todayDate = new Date();
+    const last7Days = Array.from({length: 7}, (_, i) => {
+      const d = new Date();
+      d.setDate(todayDate.getDate() - (6 - i));
+      return getLocalDateString(d);
+    });
+
+    for (const t of all) {
+      const tCreated = toLocalDateString(t.created_at);
+      const tDue = toLocalDateString(t.due_date || t.created_at);
+      const tCompleted = toLocalDateString(t.completed_at);
+
+      if (tDue === today) {
+        dailyGoalTotal++;
+        if (t.status === 'pending') {
+          pendingToday++;
+        } else if (t.status === 'done') {
+          completedDueToday++;
+        }
+      }
+
+      if (t.status === 'done') {
+        if (tCompleted === today) {
+          completedToday++;
+        }
+        if (t.due_date && t.completed_at) {
+          const completedDateStr = toLocalDateString(t.completed_at);
+          const dueDateStr = toLocalDateString(t.due_date);
+          if (completedDateStr < dueDateStr) {
+            completedEarly++;
+          }
+        }
+      }
+      
+      const weekIndex = last7Days.indexOf(tDue);
+      if (weekIndex !== -1) {
+        weeklyData[weekIndex].total++;
+        if (t.status === 'done') {
+          weeklyData[weekIndex].completed++;
+        }
+      }
+    }
+
+    const dailyGoalProgress = dailyGoalTotal === 0 ? 0 : Math.round((completedDueToday / dailyGoalTotal) * 100);
+
+    return {
+      dailyGoalTotal,
+      dailyGoalProgress,
+      completedToday,
+      completedDueToday,
+      pendingToday,
+      completedEarly,
+      weeklyData,
+      last7DaysLabels: last7Days.map(d => {
+        const date = new Date(d + 'T12:00:00');
+        return date.toLocaleDateString('es-ES', { weekday: 'short' }).substring(0, 3);
+      })
+    };
+  });
 
   private get db(): SQLiteObject {
     const db = this._sqlite.getDb();
@@ -163,7 +236,7 @@ export class TaskService {
 
     await this.update(id, {
       status: newStatus,
-      completed_at: completedAt ?? undefined,
+      completed_at: completedAt,
     });
   }
 

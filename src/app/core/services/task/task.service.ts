@@ -146,6 +146,12 @@ export class TaskService {
     );
 
     this._logger.info(`[TaskService] Task ID ${id} updated`);
+    
+    try {
+      await this._analytics.logEvent('task_updated', { task_id: id });
+    } catch (e) {
+      this._logger.warn('[Analytics] Failed to log task_updated', e);
+    }
   }
 
   async toggleStatus(id: number): Promise<void> {
@@ -166,5 +172,11 @@ export class TaskService {
 
     this.tasks.update(current => current.filter(t => t.id !== id));
     this._logger.info(`[TaskService] Task ID ${id} deleted`);
+    
+    try {
+      await this._analytics.logEvent('task_deleted', { task_id: id });
+    } catch (e) {
+      this._logger.warn('[Analytics] Failed to log task_deleted', e);
+    }
   }
 }

@@ -40,7 +40,8 @@
                    [task]="task"
                    [categoryName]="getCategoryName(task.category_id)"
                    (completeTask)="onCompleteTask($event)"
-                   (optionsClicked)="onOptions($event)">
+                   (optionsClicked)="goToDetail($event)"
+                   (click)="goToDetail(task)">
     </app-task-card>
     
     <div class="empty-state" *ngIf="filteredTasks().length === 0">

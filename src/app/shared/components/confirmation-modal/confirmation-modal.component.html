@@ -1,0 +1,27 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss(false)" color="medium">
+        Cerrar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="message-container">
+    <ion-text color="dark">
+      <p>{{ message }}</p>
+    </ion-text>
+  </div>
+  
+  <div class="action-buttons">
+    <ion-button color="medium" fill="outline" (click)="dismiss(false)">
+      {{ cancelText }}
+    </ion-button>
+    <ion-button color="danger" (click)="dismiss(true)">
+      {{ confirmText }}
+    </ion-button>
+  </div>
+</ion-content>

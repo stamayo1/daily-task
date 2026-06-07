@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonChip, IonLabel } from '@ionic/angular/standalone';
 import { HeaderComponent } from '../shared/components/header/header.component';
@@ -17,6 +18,7 @@ import { Task } from '../core/models/task.model';
 export class Tab1Page {
   taskService = inject(TaskService);
   categoryService = inject(CategoryService);
+  private router = inject(Router);
 
   todayDate = new Date();
 
@@ -79,7 +81,7 @@ export class Tab1Page {
     await this.taskService.update(task.id!, { status: newStatus });
   }
 
-  onOptions(task: Task) {
-    console.log('Options clicked for task', task);
+  goToDetail(task: Task) {
+    this.router.navigate(['/tabs/tab1/', task.id]);
   }
 }

@@ -7,6 +7,7 @@ import { AppComponent } from './app/app.component';
 import { FirebaseCrashlytics } from '@awesome-cordova-plugins/firebase-crashlytics/ngx';
 import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
+import { FirebaseConfig } from '@awesome-cordova-plugins/firebase-config/ngx';
 import { inject, provideAppInitializer } from '@angular/core';
 import { AppInitializer } from './app/core/services/appInitializer/app-initializer';
 
@@ -20,6 +21,7 @@ bootstrapApplication(AppComponent, {
     FirebaseCrashlytics,
     FirebaseAnalytics,
     SQLite,
+    FirebaseConfig,
     AppInitializer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),

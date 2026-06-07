@@ -1,1 +1,28 @@
+ion-tab-bar {
+  --border: 1.5px solid var(--ion-color-light);
+  --background: var(--ion-color-white);
+}
 
+ion-tab-button {
+  --color: var(--ion-color-dark-tint);
+  --color-selected: var(--ion-color-primary);
+
+  ion-icon {
+    font-size: 28px;
+  }
+}
+
+.main-tab-button {
+  overflow: visible;
+
+  ion-icon {
+    background: var(--ion-color-primary);
+    color: var(--ion-color-light);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    padding: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+}

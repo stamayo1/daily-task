@@ -1,0 +1,15 @@
+ion-toolbar {
+  --background: transparent;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+.header-title {
+  color: var(--ion-color-primary);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+ion-back-button {
+  --color: var(--ion-color-dark);
+}

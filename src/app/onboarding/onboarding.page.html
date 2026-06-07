@@ -1,0 +1,27 @@
+<ion-content class="ion-padding" [scrollY]="false">
+  <div class="onboarding-container">
+    <div class="logo-section">
+      <div class="logo-box">
+        <img src="assets/icon.png" alt="App Logo" class="logo-img" />
+      </div>
+      <h1 class="title">Daily task</h1>
+    </div>
+    
+    <div class="features-section">
+      <div class="feature-pill">
+        <ion-icon name="checkmark-circle-outline" class="feature-icon primary-color"></ion-icon>
+        <span>Organiza tu día</span>
+      </div>
+      <div class="feature-pill">
+        <ion-icon name="trending-up-outline" class="feature-icon success-color"></ion-icon>
+        <span>Sigue tu progreso</span>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <ion-button expand="block" class="start-btn" (click)="getStarted()">
+        Comenzar <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

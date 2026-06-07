@@ -32,6 +32,142 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
+/* Modo oscuro deshabilitado — app solo en modo claro */
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+/* ==========================================================================
+   Reusable Form Styles
+   ========================================================================== */
+
+.form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  
+  .form-label {
+    margin-bottom: 0;
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  font-size: 14px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Custom Input */
+ion-input.custom-input {
+  --background: #ffffff;
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
+  border: 1px solid #e6e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+/* Custom Textarea */
+ion-textarea.custom-textarea {
+  --background: #f4f6fa;
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
+  --padding-top: 16px !important;
+  --padding-bottom: 16px !important;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Date Button */
+.date-button {
+  display: flex;
+  align-items: center;
+  background: #eef4ff; /* Light blue */
+  color: var(--ion-color-primary);
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  
+  ion-icon {
+    font-size: 20px;
+    margin-right: 8px;
+  }
+}
+
+/* Priority Segments */
+.priority-segment {
+  display: flex;
+  gap: 10px;
+  
+  .priority-btn {
+    flex: 1;
+    margin: 0;
+    --background: transparent;
+    --color: var(--ion-color-dark);
+    --border-color: #e6e8f0;
+    --border-style: solid;
+    --border-width: 1px;
+    --border-radius: 20px;
+    --box-shadow: none;
+    font-size: 14px;
+    font-weight: 500;
+    
+    &.selected {
+      --background: var(--ion-color-primary);
+      --color: #ffffff;
+      --border-color: var(--ion-color-primary);
+    }
+  }
+}
+
+/* Categories Chips */
+.categories-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  
+  ion-chip {
+    margin: 0;
+    font-weight: 500;
+    font-size: 13px;
+    --background: #f4f6fa;
+    --color: var(--ion-color-dark);
+    
+    &.selected {
+      --background: var(--ion-color-primary);
+      --color: #ffffff;
+    }
+    
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+.add-new-btn {
+  color: var(--ion-color-primary);
+  font-weight: 600;
+  font-size: 13px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  
+  ion-icon {
+    font-size: 16px;
+  }
+}

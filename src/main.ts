@@ -5,6 +5,7 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { FirebaseCrashlytics } from '@awesome-cordova-plugins/firebase-crashlytics/ngx';
+import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
 import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 import { inject, provideAppInitializer } from '@angular/core';
 import { AppInitializer } from './app/core/services/appInitializer/app-initializer';
@@ -17,6 +18,7 @@ const initializeFactory = () => async () => {
 bootstrapApplication(AppComponent, {
   providers: [
     FirebaseCrashlytics,
+    FirebaseAnalytics,
     SQLite,
     AppInitializer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

@@ -1,5 +1,50 @@
 <app-header></app-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+<ion-content [fullscreen]="true" class="ion-padding" style="--background: #f8f9fa;">
+  <div class="header-section">
+    <h1 class="main-title">Tareas de Hoy</h1>
+    <p class="subtitle date-text">{{ formattedDate }}</p>
+    <p class="subtitle">
+      Tienes {{ filteredTasks().length }} tareas en esta lista.
+    </p>
+  </div>
+
+  <!-- Status Filters -->
+  <div class="filter-row status-filters">
+    <ion-chip [class.selected]="statusFilter() === 'all'" (click)="setStatusFilter('all')">
+      <ion-label>Todas</ion-label>
+    </ion-chip>
+    <ion-chip [class.selected]="statusFilter() === 'today'" (click)="setStatusFilter('today')">
+      <ion-label>Hoy</ion-label>
+    </ion-chip>
+    <ion-chip [class.selected]="statusFilter() === 'pending'" (click)="setStatusFilter('pending')">
+      <ion-label>Pendientes ({{ pendingCount() }})</ion-label>
+    </ion-chip>
+    <ion-chip [class.selected]="statusFilter() === 'completed'" (click)="setStatusFilter('completed')">
+      <ion-label>Completadas</ion-label>
+    </ion-chip>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="filter-row category-filters" *ngIf="categoryService.categories().length > 0">
+    <ion-chip *ngFor="let cat of categoryService.categories()" 
+              [class.selected]="categoryFilter() === cat.id"
+              (click)="toggleCategoryFilter(cat.id)">
+      <ion-label>{{ cat.name }}</ion-label>
+    </ion-chip>
+  </div>
+
+  <!-- Task List -->
+  <div class="tasks-container">
+    <app-task-card *ngFor="let task of filteredTasks()"
+                   [task]="task"
+                   [categoryName]="getCategoryName(task.category_id)"
+                   (completeTask)="onCompleteTask($event)"
+                   (optionsClicked)="onOptions($event)">
+    </app-task-card>
+    
+    <div class="empty-state" *ngIf="filteredTasks().length === 0">
+      <p>No hay tareas que coincidan con los filtros seleccionados.</p>
+    </div>
+  </div>
 </ion-content>

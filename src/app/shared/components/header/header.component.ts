@@ -10,5 +10,6 @@ import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ion
 })
 export class HeaderComponent {
   @Input() title: string = 'Daily task';
+  @Input() defaultGoBack: boolean = false;
 
 }

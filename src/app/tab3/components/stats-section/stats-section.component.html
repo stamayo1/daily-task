@@ -1,0 +1,36 @@
+<div class="stats-section">
+  
+  <!-- Completed Today -->
+  <div class="stat-card">
+    <div class="stat-icon completed-icon">
+      <ion-icon name="checkmark-circle"></ion-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ (completedToday < 10 ? '0' : '') + completedToday }}</span>
+      <span class="stat-label">Completadas Hoy</span>
+    </div>
+  </div>
+
+  <!-- Waiting/Pending -->
+  <div class="stat-card">
+    <div class="stat-icon pending-icon">
+      <ion-icon name="ellipsis-horizontal-circle"></ion-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ (pendingToday < 10 ? '0' : '') + pendingToday }}</span>
+      <span class="stat-label">Pendientes</span>
+    </div>
+  </div>
+
+  <!-- Completed Early -->
+  <div class="stat-card">
+    <div class="stat-icon early-icon">
+      <ion-icon name="rocket"></ion-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ (completedEarly < 10 ? '0' : '') + completedEarly }}</span>
+      <span class="stat-label">Completadas Anticipadas</span>
+    </div>
+  </div>
+
+</div>

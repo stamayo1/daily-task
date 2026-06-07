@@ -1,0 +1,18 @@
+<div class="chart-section">
+  <div class="chart-header">
+    <div class="chart-title">Productividad<br>Semanal</div>
+    <div class="chart-dropdown">
+      <span>Últimos 7 días</span>
+      <ion-icon name="chevron-down"></ion-icon>
+    </div>
+  </div>
+
+  <div class="bar-chart">
+    <div class="bar-col" *ngFor="let day of weeklyData; let i = index">
+      <div class="bar-bg">
+        <div class="bar-fill" [style.height]="(day.total > 0 ? (day.completed / day.total) * 100 : 0) + '%'"></div>
+      </div>
+      <span class="bar-label">{{ last7DaysLabels[i] }}</span>
+    </div>
+  </div>
+</div>

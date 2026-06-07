@@ -15,13 +15,13 @@ export type TaskStatus = 'pending' | 'done';
 export interface Task {
   id?: number;
   title: string;
-  description?: string;
+  description?: string | null;
   priority: TaskPriority;
-  due_date?: string;       // ISO 8601: 'YYYY-MM-DD'
+  due_date?: string | null;       // ISO 8601: 'YYYY-MM-DD'
   status: TaskStatus;
-  category_id?: number;
+  category_id?: number | null;
   created_at: string;      // ISO 8601 datetime
-  completed_at?: string;
+  completed_at?: string | null;
 }
 
 /**

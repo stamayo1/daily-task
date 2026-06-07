@@ -2,6 +2,10 @@
 
 Aplicación mobile para el seguimiento de tareas diarias. Enfocada en la simplicidad y funcionalidad. El objetivo es crear una aplicación multiplataforma que permita a los usuarios gestionar sus tareas diarias de manera eficiente.
 
+
+**[Apk Android](https://drive.google.com/file/d/1UccUukYRanEbgwEzEhQQ0c8HIYVbjhE4/view?usp=sharing)**
+**[Video Android](https://drive.google.com/drive/folders/1d47Cj-udRyfGfnC1TgewNWgZl6LQkhGe?usp=sharing)**
+
 ## Capturas de Pantalla
 
 | Pantalla de Bienvenida | Lista de Tareas |

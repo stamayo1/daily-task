@@ -31,11 +31,10 @@ export const SqliteMigrations: DbUpgradeVersion[] = [
                 priority INTEGER NOT NULL DEFAULT 1,
                 due_date TEXT,
                 status TEXT NOT NULL DEFAULT 'pending',
-                CHECK(status IN ('pending', 'done')),
                 category_id INTEGER,
                 created_at TEXT NOT NULL,
                 completed_at TEXT,
-                
+                CHECK(status IN ('pending', 'done')),
                 FOREIGN KEY(category_id)
                 REFERENCES Categories(id)
                 ON DELETE SET NULL

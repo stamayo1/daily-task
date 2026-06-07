@@ -4,9 +4,12 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { FirebaseCrashlytics } from '@awesome-cordova-plugins/firebase-crashlytics/ngx';
+
 
 bootstrapApplication(AppComponent, {
   providers: [
+    FirebaseCrashlytics,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),

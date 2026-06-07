@@ -16,6 +16,7 @@ import { CategoryService } from '../core/services/category/category.service';
 import { CategoryModalComponent } from '../shared/components/category-modal/category-modal.component';
 import { Category } from '../core/models/category.model';
 import { ConfirmationModalComponent } from '../shared/components/confirmation-modal/confirmation-modal.component';
+import { RemoteConfigService } from '../core/services/remoteConfig/remote-config.service';
 
 @Component({
   selector: 'app-task-detail',
@@ -33,6 +34,7 @@ export class TaskDetailPage implements OnInit {
   private fb = inject(FormBuilder);
   private taskService = inject(TaskService);
   public categoryService = inject(CategoryService);
+  public remoteConfigService = inject(RemoteConfigService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private modalController = inject(ModalController);

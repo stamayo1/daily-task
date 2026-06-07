@@ -26,7 +26,7 @@
   </div>
 
   <!-- Category Filters -->
-  <div class="filter-row category-filters" *ngIf="categoryService.categories().length > 0">
+  <div class="filter-row category-filters" *ngIf="remoteConfigService.showCategoryClassification() && categoryService.categories().length > 0">
     <ion-chip *ngFor="let cat of categoryService.categories()" 
               [class.selected]="categoryFilter() === cat.id"
               (click)="toggleCategoryFilter(cat.id)">
@@ -38,7 +38,7 @@
   <div class="tasks-container">
     <app-task-card *ngFor="let task of filteredTasks()"
                    [task]="task"
-                   [categoryName]="getCategoryName(task.category_id)"
+                   [categoryName]="remoteConfigService.showCategoryClassification() ? getCategoryName(task.category_id) : undefined"
                    (completeTask)="onCompleteTask($event)"
                    (optionsClicked)="goToDetail($event)"
                    (click)="goToDetail(task)">

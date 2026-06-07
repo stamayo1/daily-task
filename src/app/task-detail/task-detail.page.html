@@ -47,7 +47,7 @@
       </div>
 
       <!-- Card 4: Categories -->
-      <div class="form-card">
+      <div class="form-card" *ngIf="remoteConfigService.showCategoryClassification()">
         <div class="label-row">
           <label class="form-label">Categorías</label>
           <button type="button" class="add-new-btn" (click)="openCategoryModal()"><ion-icon name="add"></ion-icon>

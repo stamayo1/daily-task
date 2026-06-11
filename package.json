@@ -24,6 +24,7 @@
     "@awesome-cordova-plugins/firebase-analytics": "^9.2.0",
     "@awesome-cordova-plugins/firebase-config": "^9.2.0",
     "@awesome-cordova-plugins/firebase-crashlytics": "^9.2.0",
+    "@awesome-cordova-plugins/firebase-x": "^9.2.0",
     "@awesome-cordova-plugins/sqlite": "^9.2.0",
     "@ionic/angular": "^8.0.0",
     "@ionic/cordova-builders": "^12.3.0",
@@ -48,9 +49,7 @@
     "@typescript-eslint/parser": "^8.18.0",
     "cordova-android": "^15.0.0",
     "cordova-ios": "^8.1.0",
-    "cordova-plugin-firebase-analytics": "^8.0.0",
-    "cordova-plugin-firebase-config": "^8.0.0",
-    "cordova-plugin-firebase-crashlytics": "^1.2.0",
+    "cordova-plugin-firebasex": "^20.0.2",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^5.0.0",
     "cordova-plugin-splashscreen": "5.0.2",
@@ -77,15 +76,11 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-firebase-config": {
-        "ANDROID_FIREBASE_BOM_VERSION": "32.5.0",
-        "IOS_FIREBASE_POD_VERSION": "10.17.0"
-      },
       "cordova-sqlite-storage": {},
-      "cordova-plugin-firebase-crashlytics": {
-        "ANDROID_FIREBASE_CORE_VERSION": "16.0.0",
-        "ANDROID_FIREBASE_ANALYTICS_VERSION": "17.4.3",
-        "ANDROID_FIREBASE_CRASHLYTICS_VERSION": "17.1.0"
+      "cordova-plugin-firebasex": {
+        "ANDROID_FIREBASE_BOM_VERSION": "33.15.0",
+        "IOS_FIREBASE_CONFIG_FILE": "GoogleService-Info.plist",
+        "IOS_USE_FRAMEWORKS": "true"
       }
     },
     "platforms": [

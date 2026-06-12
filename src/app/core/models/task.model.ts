@@ -17,7 +17,7 @@ export interface Task {
   title: string;
   description?: string | null;
   priority: TaskPriority;
-  due_date?: string | null;       // ISO 8601: 'YYYY-MM-DD'
+  due_date?: string | null;       // ISO 8601 string including time: 'YYYY-MM-DDTHH:mm:ss.sssZ'
   status: TaskStatus;
   category_id?: number | null;
   created_at: string;      // ISO 8601 datetime

@@ -21,14 +21,14 @@
 
       <!-- Card 2: Due Date -->
       <div class="form-card">
-        <label class="form-label">Fecha Límite</label>
+        <label class="form-label">Fecha y hora Límite</label>
         <div class="date-button">
           <ion-icon name="calendar-outline"></ion-icon>
           <ion-datetime-button datetime="datetime-edit"></ion-datetime-button>
         </div>
         <ion-modal [keepContentsMounted]="true">
           <ng-template>
-            <ion-datetime id="datetime-edit" formControlName="due_date" presentation="date"></ion-datetime>
+            <ion-datetime id="datetime-edit" formControlName="due_date" presentation="date-time"></ion-datetime>
           </ng-template>
         </ion-modal>
       </div>

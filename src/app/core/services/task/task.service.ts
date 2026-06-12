@@ -4,7 +4,7 @@ import { SqliteServices } from '../sqliteServices/sqlite-services';
 import { LoggerServices } from '../loggerServices/logger-services';
 import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
-import { FirebaseAnalytics } from '@awesome-cordova-plugins/firebase-analytics/ngx';
+import { FirebaseX } from '@awesome-cordova-plugins/firebase-x/ngx';
 
 import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
 
@@ -14,7 +14,7 @@ import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
 export class TaskService {
   private readonly _sqlite = inject(SqliteServices);
   private readonly _logger = inject(LoggerServices);
-  private readonly _analytics = inject(FirebaseAnalytics);
+  private readonly _analytics = inject(FirebaseX);
 
   readonly tasks = signal<Task[]>([]);
   readonly searchQuery = signal<string>('');

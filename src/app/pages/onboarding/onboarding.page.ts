@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { checkmarkCircleOutline, trendingUpOutline, arrowForward, checkmark } from 'ionicons/icons';
-import { UserService } from '../core/services/user/user.service';
+import { UserService } from 'src/app/core/services/user/user.service';
+
 
 @Component({
   selector: 'app-onboarding',

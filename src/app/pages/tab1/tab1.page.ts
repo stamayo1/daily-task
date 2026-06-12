@@ -2,13 +2,13 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonChip, IonLabel } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../shared/components/header/header.component';
-import { TaskService } from '../core/services/task/task.service';
-import { CategoryService } from '../core/services/category/category.service';
-import { TaskCardComponent } from '../shared/components/task-card/task-card.component';
-import { Task } from '../core/models/task.model';
-import { getLocalDateString, toLocalDateString } from '../core/utils/date.utils';
-import { RemoteConfigService } from '../core/services/remoteConfig/remote-config.service';
+import { HeaderComponent } from 'src/app/shared/components/header/header.component';
+import { TaskCardComponent } from 'src/app/shared/components/task-card/task-card.component';
+import { TaskService } from 'src/app/core/services/task/task.service';
+import { CategoryService } from 'src/app/core/services/category/category.service';
+import { Task } from 'src/app/core/models/task.model';
+import { getLocalDateString, toLocalDateString } from 'src/app/core/utils/date.utils';
+import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
 
 @Component({
   selector: 'app-tab1',

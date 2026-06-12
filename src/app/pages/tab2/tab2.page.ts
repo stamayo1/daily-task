@@ -1,21 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { 
-  IonContent, IonInput, IonTextarea, IonLabel, 
+import {
+  IonContent, IonInput, IonTextarea, IonLabel,
   IonButton, IonIcon, IonChip, IonDatetime, IonDatetimeButton, IonModal,
-  ModalController 
+  ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarOutline, add, checkmarkCircleOutline, pencil } from 'ionicons/icons';
 
-import { HeaderComponent } from '../shared/components/header/header.component';
-import { TaskService } from '../core/services/task/task.service';
-import { CategoryService } from '../core/services/category/category.service';
+import { HeaderComponent } from 'src/app/shared/components/header/header.component';
+import { TaskService } from 'src/app/core/services/task/task.service';
+import { CategoryService } from 'src/app/core/services/category/category.service';
 import { CommonModule } from '@angular/common';
-import { CategoryModalComponent } from '../shared/components/category-modal/category-modal.component';
-import { Category } from '../core/models/category.model';
-import { RemoteConfigService } from '../core/services/remoteConfig/remote-config.service';
+import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
+import { Category } from 'src/app/core/models/category.model';
+import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
 
 @Component({
   selector: 'app-tab2',
@@ -23,8 +23,8 @@ import { RemoteConfigService } from '../core/services/remoteConfig/remote-config
   styleUrls: ['tab2.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, 
-    IonContent, IonInput, IonTextarea, IonLabel, 
+    CommonModule, ReactiveFormsModule,
+    IonContent, IonInput, IonTextarea, IonLabel,
     IonButton, IonIcon, IonChip, IonDatetime, IonDatetimeButton, IonModal,
     HeaderComponent
   ]
@@ -42,8 +42,8 @@ export class Tab2Page implements OnInit {
   // Icons array specifically for some typical categories if we have them by name, 
   // but usually we just use the icon if it comes from DB. For now, simple fallback.
   constructor() {
-    addIcons({ 
-      calendarOutline, add, checkmarkCircleOutline, pencil 
+    addIcons({
+      calendarOutline, add, checkmarkCircleOutline, pencil
     });
     this.initForm();
   }
@@ -78,7 +78,7 @@ export class Tab2Page implements OnInit {
     }
 
     const formValue = this.taskForm.value;
-    
+
     await this.taskService.create({
       title: formValue.title,
       description: formValue.description,

@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
-import { onboardingGuard } from './guards/onboarding.guard';
-import { skipOnboardingGuard } from './guards/skip-onboarding.guard';
+import { onboardingGuard } from './core/guards/onboarding.guard';
+import { skipOnboardingGuard } from './core/guards/skip-onboarding.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
+    loadChildren: () => import('./pages/tabs/tabs.routes').then((m) => m.routes),
     canActivate: [onboardingGuard]
   },
   {
     path: 'onboarding',
-    loadComponent: () => import('./onboarding/onboarding.page').then(m => m.OnboardingPage),
+    loadComponent: () => import('./pages/onboarding/onboarding.page').then(m => m.OnboardingPage),
     canActivate: [skipOnboardingGuard]
   }
 ];

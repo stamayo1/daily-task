@@ -9,13 +9,14 @@ import { CategoryFacade } from 'src/app/core/application/facades/category.facade
 import { Task } from 'src/app/core/models/task.model';
 import { getLocalDateString, toLocalDateString } from 'src/app/core/utils/date.utils';
 import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
+import { FormattedDatePipe } from 'src/app/shared/pipes/formatted-date.pipe';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   standalone: true,
-  imports: [IonContent, HeaderComponent, TaskCardComponent, CommonModule, IonChip, IonLabel],
+  imports: [IonContent, HeaderComponent, TaskCardComponent, CommonModule, IonChip, IonLabel, FormattedDatePipe],
 })
 export class Tab1Page {
   taskFacade = inject(TaskFacade);
@@ -53,11 +54,6 @@ export class Tab1Page {
 
   pendingCount = this.taskFacade.pendingCount;
 
-  get formattedDate(): string {
-    const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const str = this.todayDate.toLocaleDateString('es-ES', options);
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
 
   setStatusFilter(filter: 'all' | 'today' | 'pending' | 'completed') {
     this.statusFilter.set(filter);

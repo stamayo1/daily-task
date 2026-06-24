@@ -1,9 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Task, CreateTaskPayload, UpdateTaskPayload, TaskStatus } from '../../models/task.model';
-import { SqliteServices } from '../sqliteServices/sqlite-services';
+import { TaskRepository } from '../../domain/repositories/task.repository';
 import { LoggerServices } from '../loggerServices/logger-services';
-import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
-import { SqliteTableName } from '../sqliteServices/sqlite.migrations';
 import { FirebaseX } from '@awesome-cordova-plugins/firebase-x/ngx';
 
 import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
@@ -12,7 +10,7 @@ import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
   providedIn: 'root',
 })
 export class TaskService {
-  private readonly _sqlite = inject(SqliteServices);
+  private readonly _repo = inject(TaskRepository);
   private readonly _logger = inject(LoggerServices);
   private readonly _analytics = inject(FirebaseX);
 
@@ -128,30 +126,9 @@ export class TaskService {
     };
   });
 
-  private get db(): SQLiteObject {
-    const db = this._sqlite.getDb();
-    if (!db) throw new Error('[TaskService] DB not available');
-    return db;
-  }
-
   async loadAll(): Promise<void> {
     try {
-      const result = await this.db.executeSql(
-        `SELECT id, title, description, priority, due_date, status,
-                category_id, created_at, completed_at
-         FROM ${SqliteTableName.tasks}
-         ORDER BY
-           CASE status WHEN 'pending' THEN 0 ELSE 1 END,
-           CASE priority WHEN 1 THEN 0 WHEN 2 THEN 1 ELSE 2 END,
-           created_at DESC;`,
-        []
-      );
-
-      const items: Task[] = [];
-      for (let i = 0; i < result.rows.length; i++) {
-        items.push(result.rows.item(i) as Task);
-      }
-
+      const items = await this._repo.findAll();
       this.tasks.set(items);
       this._logger.info(`[TaskService] Loaded ${items.length} tasks`);
     } catch (error) {
@@ -164,62 +141,35 @@ export class TaskService {
   }
 
   async create(payload: CreateTaskPayload): Promise<number> {
-    const now = new Date().toISOString();
-
-    const result = await this.db.executeSql(
-      `INSERT INTO ${SqliteTableName.tasks} (title, description, priority, due_date, status, category_id, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?);`,
-      [
-        payload.title,
-        payload.description ?? null,
-        payload.priority,
-        payload.due_date ?? null,
-        payload.status,
-        payload.category_id ?? null,
-        now,
-      ]
-    );
-
-    const newTask: Task = {
-      ...payload,
-      id: result.insertId,
-      created_at: now,
-    };
+    const newTask = await this._repo.create(payload);
 
     this.tasks.update(current => [newTask, ...current]);
-    this._logger.info(`[TaskService] Task created with ID ${result.insertId}`);
+    this._logger.info(`[TaskService] Task created with ID ${newTask.id}`);
 
     try {
-      await this._analytics.logEvent('task_created', { 
+      await this._analytics.logEvent('task_created', {
         title: payload.title,
-        priority: payload.priority, 
-        category_id: payload.category_id ?? null 
+        priority: payload.priority,
+        category_id: payload.category_id ?? null
       });
     } catch (e) {
       this._logger.warn('[Analytics] Failed to log task_created', e);
     }
 
-    return result.insertId;
+    return newTask.id!;
   }
 
   async update(id: number, changes: UpdateTaskPayload): Promise<void> {
-    const fields = Object.keys(changes) as (keyof UpdateTaskPayload)[];
-    if (fields.length === 0) return;
+    if (Object.keys(changes).length === 0) return;
 
-    const setClauses = fields.map(f => `${f} = ?`).join(', ');
-    const values = fields.map(f => (changes as Record<string, unknown>)[f]);
-
-    await this.db.executeSql(
-      `UPDATE ${SqliteTableName.tasks} SET ${setClauses} WHERE id = ?;`,
-      [...values, id]
-    );
+    await this._repo.update(id, changes);
 
     this.tasks.update(current =>
       current.map(t => t.id === id ? { ...t, ...changes } : t)
     );
 
     this._logger.info(`[TaskService] Task ID ${id} updated`);
-    
+
     try {
       await this._analytics.logEvent('task_updated', { task_id: id });
     } catch (e) {
@@ -241,7 +191,7 @@ export class TaskService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.db.executeSql(`DELETE FROM ${SqliteTableName.tasks} WHERE id = ?;`, [id]);
+    await this._repo.delete(id);
 
     this.tasks.update(current => current.filter(t => t.id !== id));
     this._logger.info(`[TaskService] Task ID ${id} deleted`);

@@ -7,72 +7,15 @@
       <p class="page-subtitle">Divide tus metas en pasos accionables.</p>
     </div>
 
-    <form [formGroup]="taskForm" (ngSubmit)="createTask()">
-
-      <!-- Card 1: Title & Description -->
-      <div class="form-card">
-        <label class="form-label">Título de Tarea</label>
-        <ion-input class="custom-input" formControlName="title" placeholder="¿Qué necesitas hacer?"></ion-input>
-
-        <label class="form-label">Descripción</label>
-        <ion-textarea class="custom-textarea" formControlName="description" placeholder="Añade más detalles..."
-          [autoGrow]="true" rows="3"></ion-textarea>
-      </div>
-
-      <!-- Card 2: Due Date -->
-      <div class="form-card">
-        <label class="form-label">Fecha y hora Límite</label>
-        <div class="date-button">
-          <ion-icon name="calendar-outline"></ion-icon>
-          <!-- Using IonDatetimeButton which gives a very native looking button to open the modal -->
-          <ion-datetime-button datetime="datetime"></ion-datetime-button>
-        </div>
-        <ion-modal [keepContentsMounted]="true">
-          <ng-template>
-            <ion-datetime id="datetime" formControlName="due_date" presentation="date-time"></ion-datetime>
-          </ng-template>
-        </ion-modal>
-      </div>
-
-      <!-- Card 3: Priority -->
-      <div class="form-card">
-        <label class="form-label">Prioridad</label>
-        <div class="priority-segment">
-          <ion-button class="priority-btn" [class.selected]="taskForm.get('priority')?.value === 3"
-            (click)="setPriority(3)">Baja</ion-button>
-          <ion-button class="priority-btn" [class.selected]="taskForm.get('priority')?.value === 2"
-            (click)="setPriority(2)">Media</ion-button>
-          <ion-button class="priority-btn" [class.selected]="taskForm.get('priority')?.value === 1"
-            (click)="setPriority(1)">Alta</ion-button>
-        </div>
-      </div>
-
-      <!-- Card 4: Categories -->
-      <div class="form-card" *ngIf="remoteConfigService.showCategoryClassification()">
-        <div class="label-row">
-          <label class="form-label">Categorías</label>
-          <button type="button" class="add-new-btn" (click)="openCategoryModal()"><ion-icon name="add"></ion-icon> Añadir</button>
-        </div>
-
-        <div class="categories-container">
-          <ion-chip *ngFor="let cat of categoryFacade.categories()"
-            [class.selected]="taskForm.get('category_id')?.value === cat.id" (click)="toggleCategory(cat.id)">
-            <ion-label>{{ cat.name }}</ion-label>
-            <ion-icon name="pencil" (click)="$event.stopPropagation(); openCategoryModal(cat)" style="margin-left: 12px; font-size: 14px;"></ion-icon>
-          </ion-chip>
-          <p *ngIf="categoryFacade.categories().length === 0"
-            style="font-size: 13px; color: var(--ion-color-medium); width: 100%;">No hay categorías disponibles.</p>
-        </div>
-      </div>
-
-      <!-- Submit button -->
+    <app-task-form datetimeId="datetime-create" (submitted)="onSubmit($event)">
+      <!-- Botón submit proyectado en ng-content -->
       <div class="submit-section">
-        <ion-button expand="block" type="submit" class="submit-btn" [disabled]="taskForm.invalid">
+        <ion-button expand="block" type="submit" class="submit-btn">
           <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
           Crear Tarea
         </ion-button>
       </div>
+    </app-task-form>
 
-    </form>
   </div>
 </ion-content>

@@ -6,7 +6,7 @@ import { HeaderComponent } from 'src/app/shared/components/header/header.compone
 import { TaskCardComponent } from 'src/app/shared/components/task-card/task-card.component';
 import { TaskFacade } from 'src/app/core/application/facades/task.facade';
 import { CategoryFacade } from 'src/app/core/application/facades/category.facade';
-import { Task } from 'src/app/core/models/task.model';
+import { Task } from 'src/app/core/domain/models/task.model';
 import { getLocalDateString, toLocalDateString } from 'src/app/core/utils/date.utils';
 import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
 import { FormattedDatePipe } from 'src/app/shared/pipes/formatted-date.pipe';

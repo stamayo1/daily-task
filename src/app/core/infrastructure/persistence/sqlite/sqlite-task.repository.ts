@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { TaskRepository } from '../../../domain/repositories/task.repository';
-import { Task, CreateTaskPayload, UpdateTaskPayload } from '../../../models/task.model';
+import { Task, CreateTaskPayload, UpdateTaskPayload } from '../../../domain/models/task.model';
 import { SqliteServices } from '../../../services/sqliteServices/sqlite-services';
 import { SqliteTableName } from '../../../services/sqliteServices/sqlite.migrations';
 

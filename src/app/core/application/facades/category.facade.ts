@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Category } from '../../models/category.model';
+import { Category } from '../../domain/models/category.model';
 import { CategoryRepository } from '../../domain/repositories/category.repository';
 import { AnalyticsPort } from '../../domain/repositories/analytics.port';
 import { LoggerServices } from '../../services/loggerServices/logger-services';

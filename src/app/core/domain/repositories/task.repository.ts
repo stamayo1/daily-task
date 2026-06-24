@@ -1,4 +1,4 @@
-import { Task, CreateTaskPayload, UpdateTaskPayload } from '../../models/task.model';
+import { Task, CreateTaskPayload, UpdateTaskPayload } from '../models/task.model';
 
 export abstract class TaskRepository {
   abstract findAll(): Promise<Task[]>;

@@ -12,8 +12,8 @@ import { calendarOutline, add, pencil } from 'ionicons/icons';
 import { CategoryFacade } from 'src/app/core/application/facades/category.facade';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
 import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
-import { Category } from 'src/app/core/models/category.model';
-import { TaskPriority } from 'src/app/core/models/task.model';
+import { Category } from 'src/app/core/domain/models/category.model';
+import { TaskPriority } from 'src/app/core/domain/models/task.model';
 
 export interface TaskFormValue {
   title: string;

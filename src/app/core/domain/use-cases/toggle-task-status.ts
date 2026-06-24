@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from '../../models/task.model';
+import { Task, TaskStatus } from '../models/task.model';
 
 export interface ToggleStatusResult {
   status: TaskStatus;

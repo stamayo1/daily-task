@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Task, CreateTaskPayload, UpdateTaskPayload, TaskStatus } from '../../models/task.model';
+import { Task, CreateTaskPayload, UpdateTaskPayload, TaskStatus } from '../../domain/models/task.model';
 import { TaskRepository } from '../../domain/repositories/task.repository';
 import { AnalyticsPort } from '../../domain/repositories/analytics.port';
 import { LoggerServices } from '../../services/loggerServices/logger-services';

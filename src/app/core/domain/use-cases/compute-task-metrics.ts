@@ -1,4 +1,4 @@
-import { Task } from '../../models/task.model';
+import { Task } from '../models/task.model';
 import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
 
 export interface TaskMetrics {

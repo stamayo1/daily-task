@@ -11,7 +11,7 @@ import { HeaderComponent } from 'src/app/shared/components/header/header.compone
 import { TaskFormComponent, TaskFormValue } from 'src/app/shared/components/task-form/task-form.component';
 import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
 import { TaskFacade } from 'src/app/core/application/facades/task.facade';
-import { Task } from 'src/app/core/models/task.model';
+import { Task } from 'src/app/core/domain/models/task.model';
 
 @Component({
   selector: 'app-task-detail',

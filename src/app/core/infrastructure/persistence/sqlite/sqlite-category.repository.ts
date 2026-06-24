@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { CategoryRepository } from '../../../domain/repositories/category.repository';
-import { Category } from '../../../models/category.model';
+import { Category } from '../../../domain/models/category.model';
 import { SqliteServices } from '../../../services/sqliteServices/sqlite-services';
 import { SqliteTableName } from '../../../services/sqliteServices/sqlite.migrations';
 

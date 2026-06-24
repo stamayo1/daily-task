@@ -1,4 +1,4 @@
-import { User } from '../../models/user.model';
+import { User } from '../models/user.model';
 
 export abstract class UserRepository {
   abstract findFirst(): Promise<User | null>;

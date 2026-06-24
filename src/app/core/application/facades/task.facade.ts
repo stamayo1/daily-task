@@ -2,17 +2,14 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Task, CreateTaskPayload, UpdateTaskPayload, TaskStatus } from '../../models/task.model';
 import { TaskRepository } from '../../domain/repositories/task.repository';
 import { AnalyticsPort } from '../../domain/repositories/analytics.port';
-import { LoggerServices } from '../loggerServices/logger-services';
-
+import { LoggerServices } from '../../services/loggerServices/logger-services';
 import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class TaskService {
+@Injectable({ providedIn: 'root' })
+export class TaskFacade {
   private readonly _repo = inject(TaskRepository);
-  private readonly _logger = inject(LoggerServices);
   private readonly _analytics = inject(AnalyticsPort);
+  private readonly _logger = inject(LoggerServices);
 
   readonly tasks = signal<Task[]>([]);
   readonly searchQuery = signal<string>('');
@@ -108,7 +105,9 @@ export class TaskService {
       }
     }
 
-    const dailyGoalProgress = dailyGoalTotal === 0 ? 0 : Math.round((completedDueToday / dailyGoalTotal) * 100);
+    const dailyGoalProgress = dailyGoalTotal === 0
+      ? 0
+      : Math.round((completedDueToday / dailyGoalTotal) * 100);
 
     return {
       dailyGoalTotal,
@@ -125,13 +124,14 @@ export class TaskService {
     };
   });
 
+  // ── Comandos ────────────────────────────────────────────────────────────
   async loadAll(): Promise<void> {
     try {
       const items = await this._repo.findAll();
       this.tasks.set(items);
-      this._logger.info(`[TaskService] Loaded ${items.length} tasks`);
+      this._logger.info(`[TaskFacade] Loaded ${items.length} tasks`);
     } catch (error) {
-      this._logger.error('[TaskService] Error loading tasks', error);
+      this._logger.error('[TaskFacade] Error loading tasks', error);
     }
   }
 
@@ -141,9 +141,8 @@ export class TaskService {
 
   async create(payload: CreateTaskPayload): Promise<number> {
     const newTask = await this._repo.create(payload);
-
     this.tasks.update(current => [newTask, ...current]);
-    this._logger.info(`[TaskService] Task created with ID ${newTask.id}`);
+    this._logger.info(`[TaskFacade] Task created with ID ${newTask.id}`);
 
     await this._analytics.track('task_created', {
       title: payload.title,
@@ -158,12 +157,10 @@ export class TaskService {
     if (Object.keys(changes).length === 0) return;
 
     await this._repo.update(id, changes);
-
     this.tasks.update(current =>
       current.map(t => t.id === id ? { ...t, ...changes } : t)
     );
-
-    this._logger.info(`[TaskService] Task ID ${id} updated`);
+    this._logger.info(`[TaskFacade] Task ID ${id} updated`);
 
     await this._analytics.track('task_updated', { task_id: id });
   }
@@ -175,17 +172,13 @@ export class TaskService {
     const newStatus: TaskStatus = task.status === 'pending' ? 'done' : 'pending';
     const completedAt = newStatus === 'done' ? new Date().toISOString() : null;
 
-    await this.update(id, {
-      status: newStatus,
-      completed_at: completedAt,
-    });
+    await this.update(id, { status: newStatus, completed_at: completedAt });
   }
 
   async delete(id: number): Promise<void> {
     await this._repo.delete(id);
-
     this.tasks.update(current => current.filter(t => t.id !== id));
-    this._logger.info(`[TaskService] Task ID ${id} deleted`);
+    this._logger.info(`[TaskFacade] Task ID ${id} deleted`);
 
     await this._analytics.track('task_deleted', { task_id: id });
   }

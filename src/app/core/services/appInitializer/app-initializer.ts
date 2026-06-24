@@ -4,8 +4,8 @@ import { SqliteServices } from '../sqliteServices/sqlite-services';
 import { LoggerServices } from '../loggerServices/logger-services';
 import { Platform } from '@ionic/angular/standalone';
 import { UserService } from '../user/user.service';
-import { TaskService } from '../task/task.service';
-import { CategoryService } from '../category/category.service';
+import { TaskFacade } from '../../application/facades/task.facade';
+import { CategoryFacade } from '../../application/facades/category.facade';
 import { RemoteConfigService } from '../remoteConfig/remote-config.service';
 
 @Injectable({
@@ -19,8 +19,8 @@ export class AppInitializer {
   private _userService = inject(UserService);
   private _logger = inject(LoggerServices);
   private _platform = inject(Platform);
-  private _taskService = inject(TaskService);
-  private _categoryService = inject(CategoryService);
+  private _taskFacade = inject(TaskFacade);
+  private _categoryFacade = inject(CategoryFacade);
   private _remoteConfigService = inject(RemoteConfigService);
 
   async init(): Promise<void> {
@@ -37,8 +37,8 @@ export class AppInitializer {
       
       // Load initial data
       await Promise.all([
-        this._taskService.loadAll(),
-        this._categoryService.loadAll(),
+        this._taskFacade.loadAll(),
+        this._categoryFacade.loadAll(),
         this._userService.checkOnboarding()
       ]);
 

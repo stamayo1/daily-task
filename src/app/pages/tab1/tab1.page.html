@@ -3,7 +3,7 @@
 <ion-content [fullscreen]="true" class="ion-padding" style="--background: #f8f9fa;">
   <div class="header-section">
     <h1 class="main-title">Tareas de Hoy</h1>
-    <p class="subtitle date-text">{{ formattedDate }}</p>
+    <p class="subtitle date-text">{{ todayDate | formattedDate }}</p>
     <p class="subtitle">
       Tienes {{ filteredTasks().length }} tareas en esta lista.
     </p>
@@ -26,8 +26,8 @@
   </div>
 
   <!-- Category Filters -->
-  <div class="filter-row category-filters" *ngIf="remoteConfigService.showCategoryClassification() && categoryService.categories().length > 0">
-    <ion-chip *ngFor="let cat of categoryService.categories()" 
+  <div class="filter-row category-filters" *ngIf="remoteConfigService.showCategoryClassification() && categoryFacade.categories().length > 0">
+    <ion-chip *ngFor="let cat of categoryFacade.categories()" 
               [class.selected]="categoryFilter() === cat.id"
               (click)="toggleCategoryFilter(cat.id)">
       <ion-label>{{ cat.name }}</ion-label>

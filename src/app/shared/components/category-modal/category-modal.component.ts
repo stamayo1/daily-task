@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { 
-  IonHeader, IonToolbar, IonTitle, IonContent, 
-  IonButtons, IonButton, IonInput, IonItem, IonLabel, 
-  ModalController 
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent,
+  IonButtons, IonButton, IonInput, IonItem, IonLabel,
+  ModalController
 } from '@ionic/angular/standalone';
-import { Category } from '../../../core/models/category.model';
+import { Category } from '../../../core/domain/models/category.model';
 
 @Component({
   selector: 'app-category-modal',
@@ -14,8 +14,8 @@ import { Category } from '../../../core/models/category.model';
   styleUrls: ['./category-modal.component.scss'],
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, 
-    IonHeader, IonToolbar, IonTitle, IonContent, 
+    CommonModule, ReactiveFormsModule,
+    IonHeader, IonToolbar, IonTitle, IonContent,
     IonButtons, IonButton, IonInput, IonItem, IonLabel
   ]
 })

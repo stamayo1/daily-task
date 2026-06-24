@@ -4,22 +4,23 @@ import { CommonModule } from '@angular/common';
 import { IonContent, IonChip, IonLabel } from '@ionic/angular/standalone';
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
 import { TaskCardComponent } from 'src/app/shared/components/task-card/task-card.component';
-import { TaskService } from 'src/app/core/services/task/task.service';
-import { CategoryService } from 'src/app/core/services/category/category.service';
-import { Task } from 'src/app/core/models/task.model';
+import { TaskFacade } from 'src/app/core/application/facades/task.facade';
+import { CategoryFacade } from 'src/app/core/application/facades/category.facade';
+import { Task } from 'src/app/core/domain/models/task.model';
 import { getLocalDateString, toLocalDateString } from 'src/app/core/utils/date.utils';
 import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
+import { FormattedDatePipe } from 'src/app/shared/pipes/formatted-date.pipe';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   standalone: true,
-  imports: [IonContent, HeaderComponent, TaskCardComponent, CommonModule, IonChip, IonLabel],
+  imports: [IonContent, HeaderComponent, TaskCardComponent, CommonModule, IonChip, IonLabel, FormattedDatePipe],
 })
 export class Tab1Page {
-  taskService = inject(TaskService);
-  categoryService = inject(CategoryService);
+  taskFacade = inject(TaskFacade);
+  categoryFacade = inject(CategoryFacade);
   remoteConfigService = inject(RemoteConfigService);
   private router = inject(Router);
 
@@ -29,7 +30,7 @@ export class Tab1Page {
   categoryFilter = signal<number | null>(null);
 
   filteredTasks = computed(() => {
-    let tasks = this.taskService.tasks();
+    let tasks = this.taskFacade.tasks();
     const sFilter = this.statusFilter();
     const cFilter = this.categoryFilter();
 
@@ -51,15 +52,8 @@ export class Tab1Page {
     return tasks;
   });
 
-  pendingCount = computed(() => {
-    return this.taskService.tasks().filter(t => t.status === 'pending').length;
-  });
+  pendingCount = this.taskFacade.pendingCount;
 
-  get formattedDate(): string {
-    const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const str = this.todayDate.toLocaleDateString('es-ES', options);
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
 
   setStatusFilter(filter: 'all' | 'today' | 'pending' | 'completed') {
     this.statusFilter.set(filter);
@@ -75,12 +69,11 @@ export class Tab1Page {
 
   getCategoryName(categoryId?: number | null): string | undefined {
     if (!categoryId) return undefined;
-    const cat = this.categoryService.categories().find(c => c.id === categoryId);
-    return cat?.name;
+    return this.categoryFacade.getById(categoryId)?.name;
   }
 
   async onCompleteTask(task: Task) {
-    await this.taskService.toggleStatus(task.id!);
+    await this.taskFacade.toggleStatus(task.id!);
   }
 
   goToDetail(task: Task) {

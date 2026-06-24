@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisVertical, timeOutline, calendarOutline, locationOutline } from 'ionicons/icons';
-import { Task, PRIORITY_LABELS, PRIORITY_COLORS } from '../../../core/models/task.model';
+import { Task, PRIORITY_LABELS, PRIORITY_COLORS } from '../../../core/domain/models/task.model';
 
 @Component({
   selector: 'app-task-card',
@@ -15,7 +15,7 @@ import { Task, PRIORITY_LABELS, PRIORITY_COLORS } from '../../../core/models/tas
 export class TaskCardComponent {
   @Input() task!: Task;
   @Input() categoryName?: string;
-  
+
   @Output() completeTask = new EventEmitter<Task>();
   @Output() optionsClicked = new EventEmitter<Task>();
 

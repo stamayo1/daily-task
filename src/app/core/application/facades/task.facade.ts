@@ -3,7 +3,8 @@ import { Task, CreateTaskPayload, UpdateTaskPayload, TaskStatus } from '../../mo
 import { TaskRepository } from '../../domain/repositories/task.repository';
 import { AnalyticsPort } from '../../domain/repositories/analytics.port';
 import { LoggerServices } from '../../services/loggerServices/logger-services';
-import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
+import { computeTaskMetrics } from '../../domain/use-cases/compute-task-metrics';
+import { toggleTaskStatus } from '../../domain/use-cases/toggle-task-status';
 
 @Injectable({ providedIn: 'root' })
 export class TaskFacade {
@@ -52,79 +53,8 @@ export class TaskFacade {
       .slice(0, 5)
   );
 
-  readonly metrics = computed(() => {
-    const all = this.tasks();
-    const today = getLocalDateString();
+  readonly metrics = computed(() => computeTaskMetrics(this.tasks()));
 
-    let completedToday = 0;
-    let completedDueToday = 0;
-    let pendingToday = 0;
-    let completedEarly = 0;
-    let dailyGoalTotal = 0;
-
-    const weeklyData = Array.from({ length: 7 }, () => ({ completed: 0, total: 0 }));
-    const todayDate = new Date();
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date();
-      d.setDate(todayDate.getDate() - (6 - i));
-      return getLocalDateString(d);
-    });
-
-    for (const t of all) {
-      const tDue = toLocalDateString(t.due_date || t.created_at);
-      const tCompleted = toLocalDateString(t.completed_at);
-
-      if (tDue === today) {
-        dailyGoalTotal++;
-        if (t.status === 'pending') {
-          pendingToday++;
-        } else if (t.status === 'done') {
-          completedDueToday++;
-        }
-      }
-
-      if (t.status === 'done') {
-        if (tCompleted === today) {
-          completedToday++;
-        }
-        if (t.due_date && t.completed_at) {
-          const completedDateStr = toLocalDateString(t.completed_at);
-          const dueDateStr = toLocalDateString(t.due_date);
-          if (completedDateStr < dueDateStr) {
-            completedEarly++;
-          }
-        }
-      }
-
-      const weekIndex = last7Days.indexOf(tDue);
-      if (weekIndex !== -1) {
-        weeklyData[weekIndex].total++;
-        if (t.status === 'done') {
-          weeklyData[weekIndex].completed++;
-        }
-      }
-    }
-
-    const dailyGoalProgress = dailyGoalTotal === 0
-      ? 0
-      : Math.round((completedDueToday / dailyGoalTotal) * 100);
-
-    return {
-      dailyGoalTotal,
-      dailyGoalProgress,
-      completedToday,
-      completedDueToday,
-      pendingToday,
-      completedEarly,
-      weeklyData,
-      last7DaysLabels: last7Days.map(d => {
-        const date = new Date(d + 'T12:00:00');
-        return date.toLocaleDateString('es-ES', { weekday: 'short' }).substring(0, 3);
-      })
-    };
-  });
-
-  // ── Comandos ────────────────────────────────────────────────────────────
   async loadAll(): Promise<void> {
     try {
       const items = await this._repo.findAll();
@@ -169,10 +99,8 @@ export class TaskFacade {
     const task = this.getById(id);
     if (!task) return;
 
-    const newStatus: TaskStatus = task.status === 'pending' ? 'done' : 'pending';
-    const completedAt = newStatus === 'done' ? new Date().toISOString() : null;
-
-    await this.update(id, { status: newStatus, completed_at: completedAt });
+    const { status, completed_at } = toggleTaskStatus(task);
+    await this.update(id, { status, completed_at });
   }
 
   async delete(id: number): Promise<void> {

@@ -1,22 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  IonContent, IonInput, IonTextarea, IonLabel,
-  IonButton, IonIcon, IonChip, IonDatetime, IonDatetimeButton, IonModal,
+  IonContent, IonButton, IonIcon,
   ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { calendarOutline, add, checkmarkCircleOutline, pencil, trashOutline } from 'ionicons/icons';
-import { CommonModule } from '@angular/common';
+import { checkmarkCircleOutline, trashOutline } from 'ionicons/icons';
 
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
-import { TaskFacade } from 'src/app/core/application/facades/task.facade';
-import { CategoryFacade } from 'src/app/core/application/facades/category.facade';
-import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
-import { Category } from 'src/app/core/models/category.model';
+import { TaskFormComponent, TaskFormValue } from 'src/app/shared/components/task-form/task-form.component';
 import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
-import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-config.service';
+import { TaskFacade } from 'src/app/core/application/facades/task.facade';
+import { Task } from 'src/app/core/models/task.model';
 
 @Component({
   selector: 'app-task-detail',
@@ -24,98 +19,59 @@ import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-c
   styleUrls: ['./task-detail.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule,
-    IonContent, IonInput, IonTextarea, IonLabel,
-    IonButton, IonIcon, IonChip, IonDatetime, IonDatetimeButton, IonModal,
-    HeaderComponent
+    IonContent, IonButton, IonIcon,
+    HeaderComponent, TaskFormComponent
   ]
 })
 export class TaskDetailPage implements OnInit {
-  private fb = inject(FormBuilder);
-  private taskFacade = inject(TaskFacade);
-  public categoryFacade = inject(CategoryFacade);
-  public remoteConfigService = inject(RemoteConfigService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private modalController = inject(ModalController);
+  private readonly taskFacade = inject(TaskFacade);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly modalController = inject(ModalController);
 
-  taskForm!: FormGroup;
   taskId!: number;
+  task: Task | undefined;
 
   constructor() {
-    addIcons({
-      calendarOutline, add, checkmarkCircleOutline, pencil, trashOutline
-    });
-    this.initForm();
+    addIcons({ checkmarkCircleOutline, trashOutline });
   }
 
-  ngOnInit() {
-    this.categoryFacade.loadAll();
-
+  ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.taskId = parseInt(id, 10);
-        this.loadTaskData();
+        this.task = this.taskFacade.getById(this.taskId);
+        if (!this.task) {
+          this.router.navigate(['/tabs/tab1']);
+        }
       }
     });
   }
 
-  private initForm() {
-    this.taskForm = this.fb.group({
-      title: ['', Validators.required],
-      description: [''],
-      due_date: [new Date().toISOString()],
-      priority: [2, Validators.required],
-      category_id: [null]
-    });
+  get initialValues(): Partial<TaskFormValue> {
+    if (!this.task) return {};
+    return {
+      title: this.task.title,
+      description: this.task.description ?? '',
+      due_date: this.task.due_date ?? new Date().toISOString(),
+      priority: this.task.priority,
+      category_id: this.task.category_id ?? null,
+    };
   }
 
-  private loadTaskData() {
-    const task = this.taskFacade.getById(this.taskId);
-    if (task) {
-      this.taskForm.patchValue({
-        title: task.title,
-        description: task.description || '',
-        due_date: task.due_date || new Date().toISOString(),
-        priority: task.priority,
-        category_id: task.category_id || null
-      });
-    } else {
-      // If task not found, go back
-      this.router.navigate(['/tabs/tab1']);
-    }
-  }
-
-  setPriority(level: number) {
-    this.taskForm.patchValue({ priority: level });
-  }
-
-  toggleCategory(id: number) {
-    const current = this.taskForm.get('category_id')?.value;
-    this.taskForm.patchValue({ category_id: current === id ? null : id });
-  }
-
-  async updateTask() {
-    if (this.taskForm.invalid) {
-      this.taskForm.markAllAsTouched();
-      return;
-    }
-
-    const formValue = this.taskForm.value;
-
+  async onSubmit(value: TaskFormValue): Promise<void> {
     await this.taskFacade.update(this.taskId, {
-      title: formValue.title,
-      description: formValue.description,
-      priority: formValue.priority,
-      due_date: formValue.due_date,
-      category_id: formValue.category_id
+      title: value.title,
+      description: value.description,
+      priority: value.priority,
+      due_date: value.due_date,
+      category_id: value.category_id
     });
-
     this.router.navigate(['/tabs/tab1']);
   }
 
-  async promptDelete() {
+  async promptDelete(): Promise<void> {
     const modal = await this.modalController.create({
       component: ConfirmationModalComponent,
       cssClass: 'auto-height-modal',
@@ -130,38 +86,11 @@ export class TaskDetailPage implements OnInit {
     });
 
     await modal.present();
-
     const { data: confirmed } = await modal.onWillDismiss();
 
     if (confirmed) {
       await this.taskFacade.delete(this.taskId);
       this.router.navigate(['/tabs/tab1']);
-    }
-  }
-
-  async openCategoryModal(category?: Category) {
-    const modal = await this.modalController.create({
-      component: CategoryModalComponent,
-      componentProps: { category }
-    });
-
-    await modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-
-    if (role === 'confirm' && data?.name) {
-      if (category) {
-        await this.categoryFacade.update(category.id, data.name);
-      } else {
-        const id = await this.categoryFacade.create(data.name);
-        this.taskForm.patchValue({ category_id: id });
-      }
-    } else if (role === 'delete' && category) {
-      await this.categoryFacade.delete(category.id);
-      await this.taskFacade.loadAll();
-      if (this.taskForm.get('category_id')?.value === category.id) {
-        this.taskForm.patchValue({ category_id: null });
-      }
     }
   }
 }

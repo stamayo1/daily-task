@@ -10,8 +10,8 @@ import { addIcons } from 'ionicons';
 import { calendarOutline, add, checkmarkCircleOutline, pencil } from 'ionicons/icons';
 
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
-import { TaskService } from 'src/app/core/services/task/task.service';
-import { CategoryService } from 'src/app/core/services/category/category.service';
+import { TaskFacade } from 'src/app/core/application/facades/task.facade';
+import { CategoryFacade } from 'src/app/core/application/facades/category.facade';
 import { CommonModule } from '@angular/common';
 import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
 import { Category } from 'src/app/core/models/category.model';
@@ -31,8 +31,8 @@ import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-c
 })
 export class Tab2Page implements OnInit {
   private fb = inject(FormBuilder);
-  private taskService = inject(TaskService);
-  public categoryService = inject(CategoryService);
+  private taskFacade = inject(TaskFacade);
+  public categoryFacade = inject(CategoryFacade);
   public remoteConfigService = inject(RemoteConfigService);
   private router = inject(Router);
   private modalController = inject(ModalController);
@@ -49,7 +49,7 @@ export class Tab2Page implements OnInit {
   }
 
   ngOnInit() {
-    this.categoryService.loadAll();
+    this.categoryFacade.loadAll();
   }
 
   private initForm() {
@@ -79,7 +79,7 @@ export class Tab2Page implements OnInit {
 
     const formValue = this.taskForm.value;
 
-    await this.taskService.create({
+    await this.taskFacade.create({
       title: formValue.title,
       description: formValue.description,
       priority: formValue.priority,
@@ -109,14 +109,14 @@ export class Tab2Page implements OnInit {
 
     if (role === 'confirm' && data?.name) {
       if (category) {
-        await this.categoryService.update(category.id, data.name);
+        await this.categoryFacade.update(category.id, data.name);
       } else {
-        const id = await this.categoryService.create(data.name);
+        const id = await this.categoryFacade.create(data.name);
         this.taskForm.patchValue({ category_id: id });
       }
     } else if (role === 'delete' && category) {
-      await this.categoryService.delete(category.id);
-      await this.taskService.loadAll(); // Reload tasks so any affected task clears its category
+      await this.categoryFacade.delete(category.id);
+      await this.taskFacade.loadAll();
       if (this.taskForm.get('category_id')?.value === category.id) {
         this.taskForm.patchValue({ category_id: null });
       }

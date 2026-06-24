@@ -55,12 +55,12 @@
         </div>
 
         <div class="categories-container">
-          <ion-chip *ngFor="let cat of categoryService.categories()"
+          <ion-chip *ngFor="let cat of categoryFacade.categories()"
             [class.selected]="taskForm.get('category_id')?.value === cat.id" (click)="toggleCategory(cat.id)">
             <ion-label>{{ cat.name }}</ion-label>
             <ion-icon name="pencil" (click)="$event.stopPropagation(); openCategoryModal(cat)" style="margin-left: 12px; font-size: 14px;"></ion-icon>
           </ion-chip>
-          <p *ngIf="categoryService.categories().length === 0"
+          <p *ngIf="categoryFacade.categories().length === 0"
             style="font-size: 13px; color: var(--ion-color-medium); width: 100%;">No hay categorías disponibles.</p>
         </div>
       </div>

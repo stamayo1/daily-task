@@ -11,8 +11,8 @@ import { calendarOutline, add, checkmarkCircleOutline, pencil, trashOutline } fr
 import { CommonModule } from '@angular/common';
 
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
-import { TaskService } from 'src/app/core/services/task/task.service';
-import { CategoryService } from 'src/app/core/services/category/category.service';
+import { TaskFacade } from 'src/app/core/application/facades/task.facade';
+import { CategoryFacade } from 'src/app/core/application/facades/category.facade';
 import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
 import { Category } from 'src/app/core/models/category.model';
 import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
@@ -32,8 +32,8 @@ import { RemoteConfigService } from 'src/app/core/services/remoteConfig/remote-c
 })
 export class TaskDetailPage implements OnInit {
   private fb = inject(FormBuilder);
-  private taskService = inject(TaskService);
-  public categoryService = inject(CategoryService);
+  private taskFacade = inject(TaskFacade);
+  public categoryFacade = inject(CategoryFacade);
   public remoteConfigService = inject(RemoteConfigService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -50,7 +50,7 @@ export class TaskDetailPage implements OnInit {
   }
 
   ngOnInit() {
-    this.categoryService.loadAll();
+    this.categoryFacade.loadAll();
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -72,7 +72,7 @@ export class TaskDetailPage implements OnInit {
   }
 
   private loadTaskData() {
-    const task = this.taskService.getById(this.taskId);
+    const task = this.taskFacade.getById(this.taskId);
     if (task) {
       this.taskForm.patchValue({
         title: task.title,
@@ -104,7 +104,7 @@ export class TaskDetailPage implements OnInit {
 
     const formValue = this.taskForm.value;
 
-    await this.taskService.update(this.taskId, {
+    await this.taskFacade.update(this.taskId, {
       title: formValue.title,
       description: formValue.description,
       priority: formValue.priority,
@@ -134,7 +134,7 @@ export class TaskDetailPage implements OnInit {
     const { data: confirmed } = await modal.onWillDismiss();
 
     if (confirmed) {
-      await this.taskService.delete(this.taskId);
+      await this.taskFacade.delete(this.taskId);
       this.router.navigate(['/tabs/tab1']);
     }
   }
@@ -151,14 +151,14 @@ export class TaskDetailPage implements OnInit {
 
     if (role === 'confirm' && data?.name) {
       if (category) {
-        await this.categoryService.update(category.id, data.name);
+        await this.categoryFacade.update(category.id, data.name);
       } else {
-        const id = await this.categoryService.create(data.name);
+        const id = await this.categoryFacade.create(data.name);
         this.taskForm.patchValue({ category_id: id });
       }
     } else if (role === 'delete' && category) {
-      await this.categoryService.delete(category.id);
-      await this.taskService.loadAll();
+      await this.categoryFacade.delete(category.id);
+      await this.taskFacade.loadAll();
       if (this.taskForm.get('category_id')?.value === category.id) {
         this.taskForm.patchValue({ category_id: null });
       }

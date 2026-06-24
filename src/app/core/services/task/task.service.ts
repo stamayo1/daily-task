@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Task, CreateTaskPayload, UpdateTaskPayload, TaskStatus } from '../../models/task.model';
 import { TaskRepository } from '../../domain/repositories/task.repository';
+import { AnalyticsPort } from '../../domain/repositories/analytics.port';
 import { LoggerServices } from '../loggerServices/logger-services';
-import { FirebaseX } from '@awesome-cordova-plugins/firebase-x/ngx';
 
 import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
 
@@ -12,7 +12,7 @@ import { getLocalDateString, toLocalDateString } from '../../utils/date.utils';
 export class TaskService {
   private readonly _repo = inject(TaskRepository);
   private readonly _logger = inject(LoggerServices);
-  private readonly _analytics = inject(FirebaseX);
+  private readonly _analytics = inject(AnalyticsPort);
 
   readonly tasks = signal<Task[]>([]);
   readonly searchQuery = signal<string>('');
@@ -146,15 +146,11 @@ export class TaskService {
     this.tasks.update(current => [newTask, ...current]);
     this._logger.info(`[TaskService] Task created with ID ${newTask.id}`);
 
-    try {
-      await this._analytics.logEvent('task_created', {
-        title: payload.title,
-        priority: payload.priority,
-        category_id: payload.category_id ?? null
-      });
-    } catch (e) {
-      this._logger.warn('[Analytics] Failed to log task_created', e);
-    }
+    await this._analytics.track('task_created', {
+      title: payload.title,
+      priority: payload.priority,
+      category_id: payload.category_id ?? null
+    });
 
     return newTask.id!;
   }
@@ -170,11 +166,7 @@ export class TaskService {
 
     this._logger.info(`[TaskService] Task ID ${id} updated`);
 
-    try {
-      await this._analytics.logEvent('task_updated', { task_id: id });
-    } catch (e) {
-      this._logger.warn('[Analytics] Failed to log task_updated', e);
-    }
+    await this._analytics.track('task_updated', { task_id: id });
   }
 
   async toggleStatus(id: number): Promise<void> {
@@ -195,11 +187,7 @@ export class TaskService {
 
     this.tasks.update(current => current.filter(t => t.id !== id));
     this._logger.info(`[TaskService] Task ID ${id} deleted`);
-    
-    try {
-      await this._analytics.logEvent('task_deleted', { task_id: id });
-    } catch (e) {
-      this._logger.warn('[Analytics] Failed to log task_deleted', e);
-    }
+
+    await this._analytics.track('task_deleted', { task_id: id });
   }
 }

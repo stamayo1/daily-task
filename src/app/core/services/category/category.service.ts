@@ -1,8 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Category } from '../../models/category.model';
 import { CategoryRepository } from '../../domain/repositories/category.repository';
+import { AnalyticsPort } from '../../domain/repositories/analytics.port';
 import { LoggerServices } from '../loggerServices/logger-services';
-import { FirebaseX } from '@awesome-cordova-plugins/firebase-x/ngx';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ import { FirebaseX } from '@awesome-cordova-plugins/firebase-x/ngx';
 export class CategoryService {
   private readonly _repo = inject(CategoryRepository);
   private readonly _logger = inject(LoggerServices);
-  private readonly _analytics = inject(FirebaseX);
+  private readonly _analytics = inject(AnalyticsPort);
 
   readonly categories = signal<Category[]>([]);
 
@@ -34,11 +34,7 @@ export class CategoryService {
     this.categories.update(current => [...current, newCategory].sort((a, b) => a.name.localeCompare(b.name)));
     this._logger.info(`[CategoryService] Category created with ID ${newCategory.id}`);
 
-    try {
-      await this._analytics.logEvent('category_created', { name: name });
-    } catch (e) {
-      this._logger.warn('[Analytics] Failed to log category_created', e);
-    }
+    await this._analytics.track('category_created', { name });
 
     return newCategory.id;
   }
@@ -61,11 +57,7 @@ export class CategoryService {
       this.categories.update(current => current.filter(c => c.id !== id));
       this._logger.info(`[CategoryService] Category ID ${id} deleted`);
 
-      try {
-        await this._analytics.logEvent('category_deleted', { id: id });
-      } catch (e) {
-        this._logger.warn('[Analytics] Failed to log category_deleted', e);
-      }
+      await this._analytics.track('category_deleted', { id });
     } catch (error) {
       this._logger.error(`[CategoryService] Error deleting Category ID ${id}`, error);
       throw error;
